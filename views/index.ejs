@@ -1,15 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= title %>
-    </title>
+    <title>Parkoló nyilvántartó</title>
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <h1><%= title %></h1>
-    Hello EJS!
+    <main class="container">
+        <header>
+            <h1>Parkoló nyilvántartó</h1>
+            <p>Parkolások kezelése és nyilvántartása</p>
+        </header>
+
+        <section class="panel">
+            <h2>Új parkolás rögzítése</h2>
+
+            <% if (locals.success) { %>
+                <p class="success"><%= success %></p>
+            <% } %>
+
+            <% if (locals.error) { %>
+                <p class="error"><%= error %></p>
+            <% } %>
+
+            <form action="/" method="POST">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="rendszam">Rendszám</label>
+                        <input type="text" id="rendszam" name="rendszam" placeholder="AA BB-123" maxlength="9" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tulajdonos">Tulajdonos neve</label>
+                        <input type="text" id="tulajdonos" name="tulajdonos" placeholder="Pl. Kovács Péter" minlength="6" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idotartam">Időtartam (óra)</label>
+                        <input type="number" id="idotartam" name="idotartam" min="1" max="24" step="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fizetve">Fizetve</label>
+                        <select id="fizetve" name="fizetve" required>
+                            <option value="true">Igen</option>
+                            <option value="false">Nem</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit">Parkolás hozzáadása</button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Parkolások listája</h2>
+
+            <% if (parkolasok.length > 0) { %>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Rendszám</th>
+                                <th>Tulajdonos</th>
+                                <th>Időtartam (óra)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% parkolasok.forEach(parkolas => { %>
+                                <tr class="<%= parkolas.fizetve ? '' : 'unpaid' %>">
+                                    <td><%= parkolas.id %></td>
+                                    <td><%= parkolas.rendszam %></td>
+                                    <td><%= parkolas.tulajdonos %></td>
+                                    <td><%= parkolas.idotartam %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="empty">Még nincs rögzített parkolás.</p>
+            <% } %>
+        </section>
+    </main>
 </body>
 </html>
